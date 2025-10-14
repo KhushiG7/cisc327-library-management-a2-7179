@@ -199,3 +199,32 @@ def update_borrow_record_return_date(patron_id: str, book_id: int, return_date: 
     except Exception as e:
         conn.close()
         return False
+
+def get_patron_borrow_history(patron_id: str) -> List[Dict]:
+    """ Get full borrowing history for a patron, including returned books."""
+    
+    conn = get_db_connection()
+    records = conn.execute('''
+        SELECT br.*, b.title, b.author
+        FROM borrow_records br
+        JOIN books b ON br.book_id = b.id
+        WHERE br.patron_id = ?
+        ORDER BY br.borrow_date DESC
+    ''', (patron_id,)).fetchall()
+    conn.close()
+
+    history = []
+    for record in records:
+        borrow_date = datetime.fromisoformat(record['borrow_date'])
+        due_date = datetime.fromisoformat(record['due_date'])
+        return_date = datetime.fromisoformat(record['return_date']) if record['return_date'] else None
+        history.append({
+            'book_id': record['book_id'],
+            'title': record['title'],
+            'author': record['author'],
+            'borrow_date': borrow_date,
+            'due_date': due_date,
+            'return_date': return_date,
+            'is_overdue': (datetime.now() > due_date) if return_date is None else (return_date > due_date)
+        })
+    return history
