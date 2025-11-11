@@ -2,7 +2,7 @@ import pytest
 import tempfile
 import os
 import database
-from library_service import return_book_by_patron, borrow_book_by_patron
+from services.library_service import return_book_by_patron, borrow_book_by_patron
 import datetime
 
 @pytest.fixture(autouse=True)
