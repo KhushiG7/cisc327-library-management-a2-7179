@@ -27,7 +27,14 @@ jobs:
       
     - name: Run tests with coverage
       run: |
+        # Start Flask app in background on port 5000
+        python app.py &
+        # Give it a few seconds to start
+        sleep 5
+        # Run tests
         pytest --cov=library_service --cov-report=xml tests/
+
+    
 
 
 
