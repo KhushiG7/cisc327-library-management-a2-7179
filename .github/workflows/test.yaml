@@ -22,14 +22,12 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        python -m playwright install --with-deps chromium
         pip install pytest pytest-cov
       
     - name: Run tests with coverage
       run: |
         pytest --cov=library_service --cov-report=xml tests/
 
-    - name: Install Playwright browsers
-      run: |
-        python -m playwright install --with-deps chromium
 
 
