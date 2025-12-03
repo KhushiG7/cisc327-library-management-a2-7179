@@ -28,4 +28,8 @@ jobs:
       run: |
         pytest --cov=library_service --cov-report=xml tests/
 
+    - name: Install Playwright browsers
+      run: |
+        python -m playwright install --with-deps chromium
+
 
